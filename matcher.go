@@ -10,12 +10,6 @@ type Text struct {
 	Content string
 }
 
-// Matcher provides text matching functionality returning list of
-// matches of the queried text to the texts it compared to.
-type Matcher interface {
-	Match(text string) []Match
-}
-
 type chainEntry struct {
 	textName string
 	chain    *markov.Chain[string]
@@ -27,9 +21,9 @@ type TextMatcher struct {
 	chains []chainEntry
 }
 
-// NewMarkovMatcher creates an istance of Markov matcher
+// NewTextMatcher creates an istance of Markov matcher
 // and preprocesses the texts to be ready for comparison operation.
-func NewMarkovMatcher(texts ...Text) *TextMatcher {
+func NewTextMatcher(texts ...Text) *TextMatcher {
 	matcher := &TextMatcher{
 		chains: make([]chainEntry, 0, len(texts)),
 	}

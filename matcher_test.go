@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var _ Matcher = &TextMatcher{}
-
 func dummyTexts() []Text {
 	return []Text{
 		{
@@ -143,7 +141,7 @@ func TestNewMarkovMatcher(t *testing.T) {
 
 	texts := dummyTexts()
 
-	matcher := NewMarkovMatcher(texts...)
+	matcher := NewTextMatcher(texts...)
 
 	assertMarkovMatchers(t, matcher, expected)
 }
@@ -234,7 +232,7 @@ func TestMatcher_Match(t *testing.T) {
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			matcher := NewMarkovMatcher(dummyTexts()...)
+			matcher := NewTextMatcher(dummyTexts()...)
 
 			result := matcher.Match(tc.text)
 
@@ -243,8 +241,8 @@ func TestMatcher_Match(t *testing.T) {
 	}
 }
 
-func ExampleMatcher() {
-	matcher := NewMarkovMatcher()
+func ExampleTextMatcher() {
+	matcher := NewTextMatcher()
 
 	matcher.Feed("lorem_ipsum", `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`)
 	matcher.Feed("excepteur_sint", `Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`)
