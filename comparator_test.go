@@ -51,7 +51,7 @@ func TestCompare(t *testing.T) {
 	}
 }
 
-func ExampleCompare() {
+func ExampleCompareTexts() {
 	t1 := "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat."
 	t2 := "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat. Integer non enim pharetra, molestie nulla ut."
 	result := CompareTexts(t1, t2)
