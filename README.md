@@ -34,4 +34,4 @@ func ExampleTextMatcher() {
 
 The matching algorithm is based on markov chain model and shows the rate of sequential texts simimilarity. 
 
-The package was born from an idea of scanning licences in go modules and I just decided to extract this code as it was more complete that other parts.
+The package was born from an idea of scanning licences in go modules and I just decided to extract this code as it was more complete than other parts.
