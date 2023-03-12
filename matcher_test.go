@@ -1,56 +1,57 @@
 package compare
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/radikh/compare/markov"
 	"github.com/stretchr/testify/assert"
 )
 
-var _ Matcher = &MarkovMatcher{}
+var _ Matcher = &TextMatcher{}
 
 func dummyTexts() []Text {
 	return []Text{
 		{
 
 			Name: "lorem_ipsum",
-			Content: []byte(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+			Content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 			sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
 			Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-			laboris nisi ut aliquip ex ea commodo consequat.`),
+			laboris nisi ut aliquip ex ea commodo consequat.`,
 		},
 		{
 
 			Name: "excepteur_sint",
-			Content: []byte(`Excepteur sint occaecat cupidatat non proident, 
-			sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+			Content: `Excepteur sint occaecat cupidatat non proident, 
+			sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 		},
 		{
 
 			Name: "occae_cat",
-			Content: []byte(`Excepteur sint occaecat cupidatat non proident, 
-			sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+			Content: `Excepteur sint occaecat cupidatat non proident, 
+			sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 		},
 		{
 
 			Name: "cupidat_non",
-			Content: []byte(`Excepteur sint occaecat cupidatat non proident, 
-			sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+			Content: `Excepteur sint occaecat cupidatat non proident, 
+			sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 		},
 		{
 
 			Name: "ut_mauris",
-			Content: []byte(`Ut mauris ipsum, viverra quis velit eget, vehicula 
+			Content: `Ut mauris ipsum, viverra quis velit eget, vehicula 
 			sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. 
-			Integer non enim pharetra, molestie.`),
+			Integer non enim pharetra, molestie.`,
 		},
 		{
 
 			Name: "vivamus_eu",
-			Content: []byte(`Vivamus eu tempor quam. Nulla vehicula lorem ut dolor 
+			Content: `Vivamus eu tempor quam. Nulla vehicula lorem ut dolor 
 			consectetur rhoncus. Ut mauris ipsum, viverra quis velit eget, vehicula 
 			sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. 
-			Integer non enim pharetra, molestie nulla ut, iaculis turpis.`),
+			Integer non enim pharetra, molestie nulla ut, iaculis turpis.`,
 		},
 	}
 }
@@ -61,10 +62,10 @@ func dummyChains() []chainEntry {
 			textName: "lorem_ipsum",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-				sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-				Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-				laboris nisi ut aliquip ex ea commodo consequat.`),
+					`Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+					sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+					Ut enim ad minim veniam, quis nostrud exercitation ullamco 
+					laboris nisi ut aliquip ex ea commodo consequat.`,
 				),
 			),
 		},
@@ -72,8 +73,8 @@ func dummyChains() []chainEntry {
 			textName: "excepteur_sint",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Excepteur sint occaecat cupidatat non proident, 
-				sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+					`Excepteur sint occaecat cupidatat non proident, 
+					sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 				),
 			),
 		},
@@ -81,8 +82,8 @@ func dummyChains() []chainEntry {
 			textName: "occae_cat",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Excepteur sint occaecat cupidatat non proident, 
-				sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+					`Excepteur sint occaecat cupidatat non proident, 
+					sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 				),
 			),
 		},
@@ -90,8 +91,8 @@ func dummyChains() []chainEntry {
 			textName: "cupidat_non",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Excepteur sint occaecat cupidatat non proident, 
-				sunt in culpa qui officia deserunt mollit anim id est laborum.`),
+					`Excepteur sint occaecat cupidatat non proident, 
+					sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 				),
 			),
 		},
@@ -99,9 +100,9 @@ func dummyChains() []chainEntry {
 			textName: "ut_mauris",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Ut mauris ipsum, viverra quis velit eget, vehicula 
+					`Ut mauris ipsum, viverra quis velit eget, vehicula 
 					sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. 
-					Integer non enim pharetra, molestie.`),
+					Integer non enim pharetra, molestie.`,
 				),
 			),
 		},
@@ -109,17 +110,17 @@ func dummyChains() []chainEntry {
 			textName: "vivamus_eu",
 			chain: markov.BuildChain(
 				Tokenize(
-					[]byte(`Vivamus eu tempor quam. Nulla vehicula lorem ut dolor 
-			consectetur rhoncus. Ut mauris ipsum, viverra quis velit eget, vehicula 
-			sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. 
-			Integer non enim pharetra, molestie nulla ut, iaculis turpis.`),
+					`Vivamus eu tempor quam. Nulla vehicula lorem ut dolor 
+					consectetur rhoncus. Ut mauris ipsum, viverra quis velit eget, vehicula 
+					sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. 
+					Integer non enim pharetra, molestie nulla ut, iaculis turpis.`,
 				),
 			),
 		},
 	}
 }
 
-func assertMarkovMatchers(t *testing.T, m1, m2 *MarkovMatcher) bool {
+func assertMarkovMatchers(t *testing.T, m1, m2 *TextMatcher) bool {
 	result := true
 
 	assert.Len(t, m1.chains, len(m2.chains))
@@ -136,13 +137,13 @@ func assertMarkovMatchers(t *testing.T, m1, m2 *MarkovMatcher) bool {
 }
 
 func TestNewMarkovMatcher(t *testing.T) {
-	expected := &MarkovMatcher{
+	expected := &TextMatcher{
 		chains: dummyChains(),
 	}
 
 	texts := dummyTexts()
 
-	matcher := NewMarkovMatcher(texts)
+	matcher := NewMarkovMatcher(texts...)
 
 	assertMarkovMatchers(t, matcher, expected)
 }
@@ -233,10 +234,27 @@ func TestMatcher_Match(t *testing.T) {
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			matcher := NewMarkovMatcher(dummyTexts())
-			result := matcher.Match([]byte(tc.text))
+			matcher := NewMarkovMatcher(dummyTexts()...)
+
+			result := matcher.Match(tc.text)
 
 			assert.ElementsMatch(t, tc.expected, result)
 		})
 	}
+}
+
+func ExampleMatcher() {
+	matcher := NewMarkovMatcher()
+
+	matcher.Feed("lorem_ipsum", `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`)
+	matcher.Feed("excepteur_sint", `Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`)
+
+	for _, match := range matcher.Match(`Lorem ipsum dolor sit amet.`) {
+		fmt.Printf("Text name: %s, confidence: %.2f\n", match.TextName, match.Confidence)
+	}
+
+	// Output:
+	//Text name: lorem_ipsum, confidence: 0.50
+	//Text name: excepteur_sint, confidence: 0.00
+
 }

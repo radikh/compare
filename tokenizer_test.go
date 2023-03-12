@@ -207,18 +207,18 @@ func TestTokenize(t *testing.T) {
 			"consequat.",
 		}
 
-		result := Tokenize([]byte(text))
+		result := Tokenize(text)
 		assert.Equal(t, expected, result)
 	})
 
 	t.Run("empty_text", func(t *testing.T) {
-		result := Tokenize([]byte{})
+		result := Tokenize("")
 
 		assert.Equal(t, []string{}, result)
 	})
 
 	t.Run("only_spaces", func(t *testing.T) {
-		text := []byte("\n\t\t\t\r   \n\r    \r\t\n \n  \t  \r")
+		text := "\n\t\t\t\r   \n\r    \r\t\n \n  \t  \r"
 		result := Tokenize(text)
 
 		assert.Equal(t, []string{}, result)

@@ -7,13 +7,13 @@ import (
 // Text is a structure that represents a text to be compared.
 type Text struct {
 	Name    string
-	Content []byte
+	Content string
 }
 
 // Matcher provides text matching functionality returning list of
 // matches of the queried text to the texts it compared to.
 type Matcher interface {
-	Match(text []byte) []Match
+	Match(text string) []Match
 }
 
 type chainEntry struct {
@@ -21,16 +21,16 @@ type chainEntry struct {
 	chain    *markov.Chain[string]
 }
 
-// MarkovMatcher is an implementation of matcher that uses
+// TextMatcher is an implementation of matcher that uses
 // markov chains for comparison.
-type MarkovMatcher struct {
+type TextMatcher struct {
 	chains []chainEntry
 }
 
 // NewMarkovMatcher creates an istance of Markov matcher
 // and preprocesses the texts to be ready for comparison operation.
-func NewMarkovMatcher(texts []Text) *MarkovMatcher {
-	matcher := &MarkovMatcher{
+func NewMarkovMatcher(texts ...Text) *TextMatcher {
+	matcher := &TextMatcher{
 		chains: make([]chainEntry, 0, len(texts)),
 	}
 
@@ -43,13 +43,24 @@ func NewMarkovMatcher(texts []Text) *MarkovMatcher {
 		}
 		matcher.chains = append(matcher.chains, entry)
 	}
-
 	return matcher
+}
+
+// Feed records a text to be compared with other texts.
+// Names may duplicate.
+func (mm *TextMatcher) Feed(name, text string) {
+	words := Tokenize(text)
+
+	entry := chainEntry{
+		chain:    markov.BuildChain(words),
+		textName: name,
+	}
+	mm.chains = append(mm.chains, entry)
 }
 
 // Match perform comparison of text with texts that were stored on matcher
 // creation step. Result contains list of matches with all stored texts.
-func (mm *MarkovMatcher) Match(text []byte) []Match {
+func (mm *TextMatcher) Match(text string) []Match {
 	words := Tokenize(text)
 	comparable := markov.BuildChain(words)
 

@@ -26,13 +26,13 @@ const (
 
 // Tokenize cleans up the text making a set of substitutions by this guide:
 // https://spdx.dev/license-list/matching-guidelines/ and slit it in tokens by spaces.
-func Tokenize(text []byte) []string {
-	text = cleanupText(text)
-	if len(text) == 0 {
+func Tokenize(text string) []string {
+	cleaned := cleanupText([]byte(text))
+	if len(cleaned) == 0 {
 		return []string{}
 	}
 
-	return strings.Split(string(text), space)
+	return strings.Split(string(cleaned), space)
 }
 
 func cleanupText(text []byte) []byte {
