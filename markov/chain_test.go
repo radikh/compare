@@ -29,97 +29,85 @@ func dummyWords() []string {
 }
 
 func dummyChain() *Chain[string] {
-	return BuildChain(dummyWords())
+	return &Chain[string]{
+		stats: map[Pair[string]]int{
+			{First: "Lorem", Second: "amet,"}: 2,
+			{First: "Lorem", Second: "ipsum"}: 1,
+			{First: "amet", Second: "sit"}:    2,
+			{First: "amet,", Second: "ipsum"}: 1,
+			{First: "dolor", Second: "amet"}:  2,
+			{First: "ipsum", Second: "dolor"}: 1,
+			{First: "ipsum", Second: "lorem"}: 1,
+			{First: "lorem", Second: "dolor"}: 1,
+			{First: "lorem", Second: "lorem"}: 1,
+			{First: "sit", Second: "Lorem"}:   2,
+		},
+		wordsCount: 15,
+		firstWord:  "Lorem",
+	}
 }
 
-// func dummyChain() *Chain[string] {
-// 	return &Chain[string]{
-// 		stats: map[string][]string{
-// 			"Lorem": {"ipsum", "amet,", "amet,"},
-// 			"ipsum": {"dolor", "lorem"},
-// 			"dolor": {"amet", "amet"},
-// 			"amet":  {"sit", "sit"},
-// 			"sit":   {"Lorem", "Lorem"},
-// 			"amet,": {"ipsum"},
-// 			"lorem": {"lorem", "dolor"},
-// 		},
-// 		wordsCount: len(dummyWords()),
-// 		firstWord:  dummyWords()[0],
-// 	}
-// }
+func TestBuildChain(t *testing.T) {
+	t.Run("many_words", func(t *testing.T) {
+		words := dummyWords()
 
-// func TestBuildChain(t *testing.T) {
-// 	t.Run("many_words", func(t *testing.T) {
-// 		words := dummyWords()
+		expected := dummyChain()
 
-// 		expected := dummyChain()
+		result := BuildChain(words)
 
-// 		result := BuildChain(words)
+		assert.Equal(t, expected, result)
+	})
 
-// 		assert.Equal(t, expected, result)
-// 	})
+	t.Run("zero_words", func(t *testing.T) {
+		words := []string{}
 
-// 	t.Run("zero_words", func(t *testing.T) {
-// 		words := []string{}
+		expected := &Chain[string]{
+			stats: map[Pair[string]]int{},
+		}
 
-// 		expected := &Chain[string]{
-// 			stats: map[string][]string{},
-// 		}
+		result := BuildChain(words)
 
-// 		result := BuildChain(words)
+		assert.Equal(t, expected, result)
+	})
 
-// 		assert.Equal(t, expected, result)
-// 	})
+	t.Run("one_word", func(t *testing.T) {
+		words := []string{"Lorem"}
 
-// 	t.Run("one_word", func(t *testing.T) {
-// 		words := []string{"Lorem"}
+		expected := &Chain[string]{
+			stats:      map[Pair[string]]int{},
+			wordsCount: 1,
+			firstWord:  "Lorem",
+		}
 
-// 		expected := &Chain[string]{
-// 			stats: map[string][]string{
-// 				"Lorem": {},
-// 			},
-// 			wordsCount: 1,
-// 			firstWord:  "Lorem",
-// 		}
+		result := BuildChain(words)
 
-// 		result := BuildChain(words)
+		assert.Equal(t, expected, result)
+	})
 
-// 		assert.Equal(t, expected, result)
-// 	})
+	t.Run("many_equal_words", func(t *testing.T) {
+		words := []string{
+			"Lorem",
+			"Lorem",
+			"Lorem",
+			"Lorem",
+			"Lorem",
+			"Lorem",
+			"Lorem",
+			"Lorem",
+		}
 
-// 	t.Run("many_equal_words", func(t *testing.T) {
-// 		words := []string{
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 			"Lorem",
-// 		}
+		expected := &Chain[string]{
+			stats: map[Pair[string]]int{
+				{First: "Lorem", Second: "Lorem"}: 7,
+			},
+			wordsCount: 8,
+			firstWord:  "Lorem"}
 
-// 		expected := &Chain[string]{
-// 			stats: map[string][]string{
-// 				"Lorem": {
-// 					"Lorem",
-// 					"Lorem",
-// 					"Lorem",
-// 					"Lorem",
-// 					"Lorem",
-// 					"Lorem",
-// 					"Lorem",
-// 				},
-// 			},
-// 			wordsCount: 8,
-// 			firstWord:  "Lorem",
-// 		}
+		result := BuildChain(words)
 
-// 		result := BuildChain(words)
-
-// 		assert.Equal(t, expected, result)
-// 	})
-// }
+		assert.Equal(t, expected, result)
+	})
+}
 
 func TestChain_Compare(t *testing.T) {
 	t.Run("self", func(t *testing.T) {
@@ -371,56 +359,4 @@ func TestChain_Compare(t *testing.T) {
 
 		assert.InDelta(t, expected, confidence, delta)
 	})
-}
-
-func TestCountLeftInteractions(t *testing.T) {
-	type testcase struct {
-		left, right []string
-		expected    int
-	}
-
-	testcases := map[string]testcase{
-		"full_intersection": {
-			left:     []string{"a", "a", "b", "c"},
-			right:    []string{"c", "a", "b", "a"},
-			expected: 4,
-		},
-		"left_empty": {
-			left:     []string{},
-			right:    []string{"c", "a", "b"},
-			expected: 0,
-		},
-		"right_empty": {
-			left:     []string{"c", "a", "b"},
-			right:    []string{},
-			expected: 0,
-		},
-		"left_bigger": {
-			left:     []string{"a", "b", "c", "a", "f"},
-			right:    []string{"c", "a", "b"},
-			expected: 3,
-		},
-		"right_bigger": {
-			left:     []string{"c", "a", "b"},
-			right:    []string{"a", "b", "c", "a", "f"},
-			expected: 3,
-		},
-		"partial_intersection": {
-			left:     []string{"c", "a", "b", "c", "e"},
-			right:    []string{"a", "b", "c", "a", "f"},
-			expected: 3,
-		},
-		"both_empty": {
-			left:     []string{},
-			right:    []string{},
-			expected: 0,
-		},
-	}
-
-	for name, tc := range testcases {
-		t.Run(name, func(t *testing.T) {
-			intersections := countIntersections(tc.left, tc.right)
-			assert.Equal(t, tc.expected, intersections)
-		})
-	}
 }

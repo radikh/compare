@@ -68,24 +68,6 @@ func (c *Chain[entry]) Compare(compared *Chain[entry]) float64 {
 	return float64(totalMatches) / float64(max(c.wordsCount, compared.wordsCount))
 }
 
-func countIntersections[entry comparable](s1, s2 []entry) int {
-	intersections := 0
-
-	set := map[entry]int{}
-	for _, str := range s2 {
-		set[str]++
-	}
-
-	for _, str := range s1 {
-		if count, ok := set[str]; ok && count > 0 {
-			intersections++
-			set[str]--
-		}
-	}
-
-	return intersections
-}
-
 func max(x, y int) int {
 	if x > y {
 		return x
