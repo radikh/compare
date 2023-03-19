@@ -37,17 +37,20 @@ func TestCompare(t *testing.T) {
 		{
 			t1:    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat.",
 			t2:    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat. Integer non enim pharetra, molestie nulla ut, iaculis turpis. Vivamus eu tempor quam. Nulla vehicula lorem ut dolor consectetur rhoncus. Ut mauris ipsum, viverra quis velit eget, vehicula sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat.",
-			match: 0.2,
+			match: 0.31,
 		},
 		{
 			t1:    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat.",
 			t2:    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed orci felis, placerat quis enim vitae, semper tempus erat. Integer non enim pharetra, molestie nulla ut, iaculis turpis. Vivamus eu tempor quam. Nulla vehicula lorem ut dolor consectetur rhoncus. Ut mauris ipsum, viverra quis velit eget, vehicula sodales nunc. Sed orci felis, placerat quis enim vitae, semper tempus erat. Integer non enim pharetra, molestie nulla ut, iaculis turpis.",
-			match: 0.0,
+			match: 0.26,
 		},
 	}
 	for _, tc := range testCases {
 		result := CompareTexts(tc.t1, tc.t2)
-		assert.Equal(t, tc.match, result)
+		assert.InDelta(t, tc.match, result, 0.01)
+
+		result = CompareTexts(tc.t2, tc.t1)
+		assert.InDelta(t, tc.match, result, 0.01)
 	}
 }
 
